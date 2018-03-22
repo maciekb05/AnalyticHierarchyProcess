@@ -272,6 +272,7 @@ public class Questions {
                 stringBuilder.append(value);
                 stringBuilder.append(" ");
             }
+            stringBuilder.setLength(stringBuilder.length() - 1);
             stringBuilder.append(";");
         }
         stringBuilder.append("\"");
