@@ -4,21 +4,23 @@ import java.util.Queue;
 import java.util.Stack;
 
 public class Questions {
-    private static Representation representation;
-    private static InputStreamReader rd;
-    private static BufferedReader bfr;
+//    private static Representation representation;
+//    private static InputStreamReader rd;
+//    private static BufferedReader bfr;
 
-    public static void main(String[] args) throws IOException {
-        rd = new InputStreamReader(System.in);
-        bfr = new BufferedReader(rd);
-        representation = new Representation();
-        askChoices();
-        askStructure();
-        askMatrixes();
-        prepareRepresentation();
-    }
+//    public static void main(String[] args) throws IOException {
+//        rd = new InputStreamReader(System.in);
+//        bfr = new BufferedReader(rd);
+//        representation = new Representation();
+//        askChoices();
+//        askStructure();
+//        askMatrixes();
+//        prepareRepresentation(representation,bfr);
+//        rd.close();
+//        bfr.close();
+//    }
 
-    private static void askChoices() throws IOException {
+    public static void askChoices(Representation representation, BufferedReader bfr) throws IOException {
         String in;
 
         System.out.println("Alternatywy.");
@@ -39,29 +41,29 @@ public class Questions {
             representation.choices.add(in);
         }
     }
-    private static void askStructure() throws IOException {
+    public static void askStructure(Representation representation, BufferedReader bfr) throws IOException {
         String in;
-        Queue<Element> queue = new LinkedList<>();
+        Queue<ElementAHP> queue = new LinkedList<>();
 
         System.out.println("Struktura.");
         System.out.print("Podaj nazwe kryterium glownego: ");
 
         in = bfr.readLine();
 
-        representation.root = new Element();
+        representation.root = new ElementAHP();
         representation.root.name = in;
         representation.root.parent = representation.root;
         representation.root.children = new LinkedList<>();
         representation.root.level = 0;
 
-        askStructureElement(representation.root);
-        Element parent = representation.root;
+        askStructureElement(representation.root, bfr);
+        ElementAHP parent = representation.root;
         Boolean end = false;
         while(!end){
             if(parent.children.size()!=0) { //Ma dzieci
-                for (Element element : parent.children) {
-                    askStructureElement(element);
-                    queue.add(element);
+                for (ElementAHP elementAHP : parent.children) {
+                    askStructureElement(elementAHP, bfr);
+                    queue.add(elementAHP);
                 }
                 parent = queue.poll();
             } else {
@@ -69,7 +71,7 @@ public class Questions {
             }
         }
     }
-    private static void askStructureElement(Element current) throws IOException {
+    private static void askStructureElement(ElementAHP current, BufferedReader bfr) throws IOException {
         String in;
 
         while(true){
@@ -84,27 +86,27 @@ public class Questions {
             else {
                 System.out.print("Podaj nazwe: ");
                 in = bfr.readLine();
-                Element element = new Element();
-                element.name = in;
-                element.parent = current;
-                element.children = new LinkedList<>();
-                element.level = element.parent.level+1;
-                current.children.add(element);
+                ElementAHP elementAHP = new ElementAHP();
+                elementAHP.name = in;
+                elementAHP.parent = current;
+                elementAHP.children = new LinkedList<>();
+                elementAHP.level = elementAHP.parent.level+1;
+                current.children.add(elementAHP);
             }
         }
     }
 
-    private static void askMatrixes() throws IOException {
+    public static void askMatrixes(Representation representation, BufferedReader bfr) throws IOException {
         System.out.println("Porownania: ");
-        Queue<Element> queue = new LinkedList<>();
-        Element current = representation.root;
-        askMatrixElement(current);
+        Queue<ElementAHP> queue = new LinkedList<>();
+        ElementAHP current = representation.root;
+        askMatrixElement(representation,current,bfr);
         Boolean end = false;
         while(!end){
             if(current.children.size()!=0) {
-                for (Element element : current.children) {
-                    askMatrixElement(element);
-                    queue.add(element);
+                for (ElementAHP elementAHP : current.children) {
+                    askMatrixElement(representation,elementAHP, bfr);
+                    queue.add(elementAHP);
                 }
                 current = queue.poll();
             } else {
@@ -113,24 +115,37 @@ public class Questions {
         }
     }
 
-    private static void askMatrixElement(Element element) throws IOException {
-        initializeMatrix(element);
+    private static void askMatrixElement(Representation representation, ElementAHP elementAHP, BufferedReader bfr) throws IOException {
+        initializeMatrix(representation, elementAHP);
         String in;
-        Integer size = element.children.size();
+        Integer size = elementAHP.children.size();
         if(size!=0){ //Ma podkategorie
             for(Integer i = 0; i < size; i++){
                 for(Integer j = 0; j < size; j++){
                     if(j < i){
-                        element.matrix.get(i).set(j,1/(element.matrix.get(j).get(i)));
+                        Double value = 1/(elementAHP.matrix.get(j).get(i));
+                        String str = value.toString();
+                        String[] splitted = str.split("\\.",2);
+                        if(splitted[1].length()>12){
+                            str = splitted[0]+"."+splitted[1].substring(0,12);
+                        }
+                        elementAHP.matrix.get(i).set(j, Double.parseDouble(str));
                     }
                     else if(j > i) {
                         System.out.print("Ile razy kryterium ");
-                        System.out.print(element.children.get(i).name);
+                        System.out.print(elementAHP.children.get(i).name);
                         System.out.print(" jest wazniejsze od kryterium ");
-                        System.out.print(element.children.get(j).name);
+                        System.out.print(elementAHP.children.get(j).name);
                         System.out.print("?: ");
                         in = bfr.readLine();
-                        element.matrix.get(i).set(j,Double.parseDouble(in));
+                        if(in.contains(".")){
+                            String[] splitted = in.split("\\.",2);
+                            if(splitted[1].length()>12){
+                                in = splitted[0]+"."+splitted[1].substring(0,12);
+                            }
+                        }
+                        elementAHP.matrix.get(i).set(j,Double.parseDouble(in));
+
                     }
                 }
             }
@@ -139,7 +154,13 @@ public class Questions {
             for(Integer i = 0; i < size; i++){
                 for(Integer j = 0; j < size; j++){
                     if(j < i){
-                        element.matrix.get(i).set(j,1/(element.matrix.get(j).get(i)));
+                        Double value = 1/(elementAHP.matrix.get(j).get(i));
+                        String str = value.toString();
+                        String[] splitted = str.split("\\.",2);
+                        if(splitted[1].length()>12){
+                            str = splitted[0]+"."+splitted[1].substring(0,12);
+                        }
+                        elementAHP.matrix.get(i).set(j, Double.parseDouble(str));
                     }
                     else if(j > i) {
                         System.out.print("Ile razy ");
@@ -147,31 +168,37 @@ public class Questions {
                         System.out.print(" jest lepsze od ");
                         System.out.print(representation.choices.get(j));
                         System.out.print(" pod wzgledem ");
-                        System.out.print(element.name);
+                        System.out.print(elementAHP.name);
                         System.out.print("?: ");
                         in = bfr.readLine();
-                        element.matrix.get(i).set(j,Double.parseDouble(in));
+                        if(in.contains(".")){
+                            String[] splitted = in.split("\\.",2);
+                            if(splitted[1].length()>12){
+                                in = splitted[0]+"."+splitted[1].substring(0,12);
+                            }
+                        }
+                        elementAHP.matrix.get(i).set(j,Double.parseDouble(in));
                     }
                 }
             }
         }
 
     }
-    private static void initializeMatrix(Element element) {
-        Integer size = element.children.size();
+    private static void initializeMatrix(Representation representation, ElementAHP elementAHP) {
+        Integer size = elementAHP.children.size();
         if(size == 0){
             size = representation.choices.size();
         }
-        element.matrix = new LinkedList<>();
+        elementAHP.matrix = new LinkedList<>();
         for(Integer i = 0; i < size; i++){
-            element.matrix.add(new LinkedList<>());
+            elementAHP.matrix.add(new LinkedList<>());
             for(Integer j = 0; j < size; j++){
-                element.matrix.get(i).add(1.0);
+                elementAHP.matrix.get(i).add(1.0);
             }
         }
     }
 
-    private static void prepareRepresentation() throws IOException {
+    public static void prepareRepresentation(Representation representation, BufferedReader bfr) throws IOException {
         String in;
         System.out.println("Zapisuje informacje");
         System.out.print("Jak chcialbys nazwac plik (UWAGA, " +
@@ -183,14 +210,15 @@ public class Questions {
         stringBuilder.append("<ROOT>\n");
 
         for(String choice : representation.choices){
+            System.out.println(choice);
             stringBuilder.append("\t");
             stringBuilder.append("<CHOICE>");
             stringBuilder.append(choice);
             stringBuilder.append("</CHOICE>\n");
         }
 
-        Stack<Element> stack = new Stack<>();
-        Element current = representation.root;
+        Stack<ElementAHP> stack = new Stack<>();
+        ElementAHP current = representation.root;
         stringBuilder.append(getHeadingElement(current));
 
         Boolean end = false;
@@ -219,7 +247,7 @@ public class Questions {
                         }
                         stringBuilder.append("\t</CRITERION>\n");
                         //Sprawdzanie czy domknac przodka?
-                        Element checking = current.parent;
+                        ElementAHP checking = current.parent;
                         while(true){
                             if(checking == checking.parent){
                                 break;
@@ -246,28 +274,27 @@ public class Questions {
         System.out.println(stringBuilder);
         String mycontent = stringBuilder.toString();
         try {
-            File file = new File("./"+in+".txt");
+            File file = new File("./"+in+".xml");
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(mycontent);
             System.out.println("Plik zapisano pomyslnie");
             bw.close();
             fw.close();
-
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
 
     }
-    private static String getHeadingElement(Element element) {
+    private static String getHeadingElement(ElementAHP elementAHP) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int tab = 0; tab < element.level; tab++) {
+        for (int tab = 0; tab < elementAHP.level; tab++) {
             stringBuilder.append("\t");
         }
         stringBuilder.append("\t<CRITERION name=\"");
-        stringBuilder.append(element.name);
+        stringBuilder.append(elementAHP.name);
         stringBuilder.append("\" m=\"");
-        for(LinkedList<Double> row : element.matrix){
+        for(LinkedList<Double> row : elementAHP.matrix){
             for(Double value : row){
                 stringBuilder.append(value);
                 stringBuilder.append(" ");
@@ -276,7 +303,7 @@ public class Questions {
             stringBuilder.append(";");
         }
         stringBuilder.append("\"");
-        if(element.children.size()==0){
+        if(elementAHP.children.size()==0){
             stringBuilder.append("/>\n");
         } else {
             stringBuilder.append(">\n");

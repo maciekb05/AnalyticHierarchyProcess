@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 
 public class Representation {
-    Element root;
+    ElementAHP root;
     LinkedList<String> choices;
 }
 

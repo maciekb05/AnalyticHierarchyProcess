@@ -1,9 +1,9 @@
 import java.util.LinkedList;
 
-public class Element {
+public class ElementAHP {
     String name;
     LinkedList<LinkedList<Double>> matrix;
-    Element parent;
-    LinkedList<Element> children;
+    ElementAHP parent;
+    LinkedList<ElementAHP> children;
     Integer level;
 }
