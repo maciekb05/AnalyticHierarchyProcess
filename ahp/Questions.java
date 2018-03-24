@@ -302,6 +302,7 @@ public class Questions {
             stringBuilder.setLength(stringBuilder.length() - 1);
             stringBuilder.append(";");
         }
+        stringBuilder.setLength(stringBuilder.length() - 1);
         stringBuilder.append("\"");
         if(elementAHP.children.size()==0){
             stringBuilder.append("/>\n");
