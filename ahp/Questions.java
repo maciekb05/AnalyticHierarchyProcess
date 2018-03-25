@@ -125,10 +125,7 @@ public class Questions {
                     if(j < i){
                         Double value = 1/(elementAHP.matrix.get(j).get(i));
                         String str = value.toString();
-                        String[] splitted = str.split("\\.",2);
-                        if(splitted[1].length()>12){
-                            str = splitted[0]+"."+splitted[1].substring(0,12);
-                        }
+                        str = round(str);
                         elementAHP.matrix.get(i).set(j, Double.parseDouble(str));
                     }
                     else if(j > i) {
@@ -139,10 +136,7 @@ public class Questions {
                         System.out.print("?: ");
                         in = bfr.readLine();
                         if(in.contains(".")){
-                            String[] splitted = in.split("\\.",2);
-                            if(splitted[1].length()>12){
-                                in = splitted[0]+"."+splitted[1].substring(0,12);
-                            }
+                            in = round(in);
                         }
                         elementAHP.matrix.get(i).set(j,Double.parseDouble(in));
 
@@ -156,10 +150,7 @@ public class Questions {
                     if(j < i){
                         Double value = 1/(elementAHP.matrix.get(j).get(i));
                         String str = value.toString();
-                        String[] splitted = str.split("\\.",2);
-                        if(splitted[1].length()>12){
-                            str = splitted[0]+"."+splitted[1].substring(0,12);
-                        }
+                        str = round(str);
                         elementAHP.matrix.get(i).set(j, Double.parseDouble(str));
                     }
                     else if(j > i) {
@@ -172,10 +163,7 @@ public class Questions {
                         System.out.print("?: ");
                         in = bfr.readLine();
                         if(in.contains(".")){
-                            String[] splitted = in.split("\\.",2);
-                            if(splitted[1].length()>12){
-                                in = splitted[0]+"."+splitted[1].substring(0,12);
-                            }
+                            in = round(in);
                         }
                         elementAHP.matrix.get(i).set(j,Double.parseDouble(in));
                     }
@@ -184,6 +172,15 @@ public class Questions {
         }
 
     }
+
+    private static String round(String str){
+        String[] splitted = str.split("\\.",2);
+        if(splitted[1].length()>12){
+            str = splitted[0]+"."+splitted[1].substring(0,12);
+        }
+        return str;
+    }
+
     private static void initializeMatrix(Representation representation, ElementAHP elementAHP) {
         Integer size = elementAHP.children.size();
         if(size == 0){
@@ -300,7 +297,7 @@ public class Questions {
                 stringBuilder.append(" ");
             }
             stringBuilder.setLength(stringBuilder.length() - 1);
-            stringBuilder.append(";");
+            stringBuilder.append("; ");
         }
         stringBuilder.append("\"");
         if(elementAHP.children.size()==0){

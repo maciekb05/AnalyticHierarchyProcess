@@ -121,8 +121,10 @@ public class FileReader {
             String[] cels = row.split(" ",0);
             to.matrix.add(new LinkedList<>());
             for(String element : cels){
-                Double value = Double.parseDouble(element);
-                to.matrix.get(nrow).add(value);
+                if(!element.equals("")) {
+                    Double value = Double.parseDouble(element);
+                    to.matrix.get(nrow).add(value);
+                }
             }
             nrow++;
         }
