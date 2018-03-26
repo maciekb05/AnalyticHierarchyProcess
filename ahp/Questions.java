@@ -1,4 +1,6 @@
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
@@ -124,9 +126,11 @@ public class Questions {
                 for(Integer j = 0; j < size; j++){
                     if(j < i){
                         Double value = 1/(elementAHP.matrix.get(j).get(i));
-                        String str = value.toString();
-                        str = round(str);
-                        elementAHP.matrix.get(i).set(j, Double.parseDouble(str));
+//                        String str = value.toString();
+//                        str = round(str);
+//                        elementAHP.matrix.get(i).set(j, Double.parseDouble(str));
+                        value = round(value, 12);
+                        elementAHP.matrix.get(i).set(j, value);
                     }
                     else if(j > i) {
                         System.out.print("Ile razy kryterium ");
@@ -135,11 +139,13 @@ public class Questions {
                         System.out.print(elementAHP.children.get(j).name);
                         System.out.print("?: ");
                         in = bfr.readLine();
-                        if(in.contains(".")){
-                            in = round(in);
-                        }
-                        elementAHP.matrix.get(i).set(j,Double.parseDouble(in));
-
+//                        if(in.contains(".")){
+//                            in = round(in);
+//                        }
+//                        elementAHP.matrix.get(i).set(j,Double.parseDouble(in));
+                        Double value = Double.parseDouble(in);
+                        value = round(value, 12);
+                        elementAHP.matrix.get(i).set(j, value);
                     }
                 }
             }
@@ -149,9 +155,12 @@ public class Questions {
                 for(Integer j = 0; j < size; j++){
                     if(j < i){
                         Double value = 1/(elementAHP.matrix.get(j).get(i));
-                        String str = value.toString();
-                        str = round(str);
-                        elementAHP.matrix.get(i).set(j, Double.parseDouble(str));
+//                        String str = value.toString();
+//                        str = round(str);
+//                        elementAHP.matrix.get(i).set(j, Double.parseDouble(str));
+
+                        value = round(value, 12);
+                        elementAHP.matrix.get(i).set(j, value);
                     }
                     else if(j > i) {
                         System.out.print("Ile razy ");
@@ -162,10 +171,13 @@ public class Questions {
                         System.out.print(elementAHP.name);
                         System.out.print("?: ");
                         in = bfr.readLine();
-                        if(in.contains(".")){
-                            in = round(in);
-                        }
-                        elementAHP.matrix.get(i).set(j,Double.parseDouble(in));
+//                        if(in.contains(".")){
+//                            in = round(in);
+//                        }
+//                        elementAHP.matrix.get(i).set(j,Double.parseDouble(in));
+                        Double value = Double.parseDouble(in);
+                        value = round(value, 12);
+                        elementAHP.matrix.get(i).set(j, value);
                     }
                 }
             }
@@ -179,6 +191,14 @@ public class Questions {
             str = splitted[0]+"."+splitted[1].substring(0,12);
         }
         return str;
+    }
+
+    private static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
     private static void initializeMatrix(Representation representation, ElementAHP elementAHP) {
@@ -293,12 +313,14 @@ public class Questions {
         stringBuilder.append("\" m=\"");
         for(LinkedList<Double> row : elementAHP.matrix){
             for(Double value : row){
+                value = round(value,12);
                 stringBuilder.append(value);
                 stringBuilder.append(" ");
             }
             stringBuilder.setLength(stringBuilder.length() - 1);
             stringBuilder.append("; ");
         }
+        stringBuilder.setLength(stringBuilder.length() - 2);
         stringBuilder.append("\"");
         if(elementAHP.children.size()==0){
             stringBuilder.append("/>\n");
