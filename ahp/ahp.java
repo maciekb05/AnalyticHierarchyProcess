@@ -21,7 +21,7 @@ public class ahp {
             System.out.println("2. Odczytaj dane");
             System.out.println("3. Zapisz wprowadzone lub odczytane dane");
             System.out.println("4. Oblicz ranking metoda GMM");
-            System.out.println("5. Oblicz ranking metoda OTHER");
+            System.out.println("5. Oblicz ranking metoda EVM");
             System.out.println("6. Wyjdz");
 
             System.out.println("Wybor: ");
@@ -58,38 +58,41 @@ public class ahp {
                         try {
                             Questions.prepareRepresentation(representation,bfr);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            System.out.println(e.getMessage());
+                            continue;
                         }
                     }
                     break;
                 case "4":
-                    RankAHP.evaluateRanks(representation,1);
-                    ranking = RankAHP.ranking(representation);
-                    for(Double value : representation.root.rank){
-                        System.out.println(value);
-                    }
-                    for(Double value : representation.root.children.get(0).rank){
-                        System.out.println(value);
-                    }
-                    for(Double value : representation.root.children.get(1).rank){
-                        System.out.println(value);
-                    }
-                    for(Double value : representation.root.children.get(2).rank){
-                        System.out.println(value);
-                    }
-                    for(Double value : ranking){
-                        System.out.println(value);
+                    try {
+                        RankAHP.evaluateRanks(representation, 1);
+                        ranking = RankAHP.ranking(representation);
+                        for(int i = 0; i < ranking.size(); i++){
+                            System.out.print("Wybor: " + representation.choices.get(i) + ": ");
+                            System.out.println(ranking.get(i));
+                        }
+                    }catch(Exception e){
+                        System.out.println("ERROR!!!");
+                        e.printStackTrace();
+                        System.out.println("Sprobuj jeszcze raz");
+                        continue;
                     }
                     break;
                 case "5":
-                    RankAHP.evaluateRanks(representation,2);
-                    ranking = RankAHP.ranking(representation);
-                    for(Double value : representation.root.rank){
-                        System.out.println(value);
+                    try{
+                        RankAHP.evaluateRanks(representation,2);
+                        ranking = RankAHP.ranking(representation);
+                        for(int i = 0; i < ranking.size(); i++){
+                            System.out.print("Wybor: " + representation.choices.get(i) + ": ");
+                            System.out.println(ranking.get(i));
+                        }
+                    }catch (Exception e){
+                        System.out.println("ERROR!!!");
+                        e.printStackTrace();
+                        System.out.println("Sprobuj jeszcze raz");
+                        continue;
                     }
-                    for(Double value : ranking){
-                        System.out.println(value);
-                    }
+
                     break;
                 case "6":
                     try {
