@@ -5,24 +5,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-public class Questions {
-//    private static Representation representation;
-//    private static InputStreamReader rd;
-//    private static BufferedReader bfr;
+class Questions {
 
-//    public static void main(String[] args) throws IOException {
-//        rd = new InputStreamReader(System.in);
-//        bfr = new BufferedReader(rd);
-//        representation = new Representation();
-//        askChoices();
-//        askStructure();
-//        askMatrixes();
-//        prepareRepresentation(representation,bfr);
-//        rd.close();
-//        bfr.close();
-//    }
-
-    public static void askChoices(Representation representation, BufferedReader bfr) throws IOException {
+    static void askChoices(Representation representation, BufferedReader bfr) throws IOException {
         String in;
 
         System.out.println("Alternatywy.");
@@ -43,7 +28,7 @@ public class Questions {
             representation.choices.add(in);
         }
     }
-    public static void askStructure(Representation representation, BufferedReader bfr) throws IOException {
+    static void askStructure(Representation representation, BufferedReader bfr) throws IOException {
         String in;
         Queue<ElementAHP> queue = new LinkedList<>();
 
@@ -98,7 +83,7 @@ public class Questions {
         }
     }
 
-    public static void askMatrixes(Representation representation, BufferedReader bfr) throws IOException {
+    static void askMatrixes(Representation representation, BufferedReader bfr) throws IOException {
         System.out.println("Porownania: ");
         Queue<ElementAHP> queue = new LinkedList<>();
         ElementAHP current = representation.root;

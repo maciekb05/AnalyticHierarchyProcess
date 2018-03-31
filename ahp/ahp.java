@@ -1,19 +1,17 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
 
 public class ahp {
     private static Representation representation;
-    private static InputStreamReader rd;
-    private static BufferedReader bfr;
 
     public static void main(String[] args) {
-        rd = new InputStreamReader(System.in);
-        bfr = new BufferedReader(rd);
 
         System.out.println("Witaj");
         Boolean end = false;
         while(!end){
+            LinkedList<Double> ranking;
 
             InputStreamReader rd = new InputStreamReader(System.in);
             BufferedReader bfr = new BufferedReader(rd);
@@ -22,7 +20,9 @@ public class ahp {
             System.out.println("1. Wprowadz dane");
             System.out.println("2. Odczytaj dane");
             System.out.println("3. Zapisz wprowadzone lub odczytane dane");
-            System.out.println("4. Wyjdz");
+            System.out.println("4. Oblicz ranking metoda GMM");
+            System.out.println("5. Oblicz ranking metoda OTHER");
+            System.out.println("6. Wyjdz");
 
             System.out.println("Wybor: ");
             String in = null;
@@ -49,7 +49,6 @@ public class ahp {
                         representation = new Representation();
                         in = bfr.readLine();
                         FileReader.parseFile(representation,in+".xml");
-                        //Questions.prepareRepresentation(representation,bfr);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -64,6 +63,35 @@ public class ahp {
                     }
                     break;
                 case "4":
+                    RankAHP.evaluateRanks(representation,1);
+                    ranking = RankAHP.ranking(representation);
+                    for(Double value : representation.root.rank){
+                        System.out.println(value);
+                    }
+                    for(Double value : representation.root.children.get(0).rank){
+                        System.out.println(value);
+                    }
+                    for(Double value : representation.root.children.get(1).rank){
+                        System.out.println(value);
+                    }
+                    for(Double value : representation.root.children.get(2).rank){
+                        System.out.println(value);
+                    }
+                    for(Double value : ranking){
+                        System.out.println(value);
+                    }
+                    break;
+                case "5":
+                    RankAHP.evaluateRanks(representation,2);
+                    ranking = RankAHP.ranking(representation);
+                    for(Double value : representation.root.rank){
+                        System.out.println(value);
+                    }
+                    for(Double value : ranking){
+                        System.out.println(value);
+                    }
+                    break;
+                case "6":
                     try {
                         bfr.close();
                         rd.close();
