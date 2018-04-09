@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.LinkedList;
 
 public class ahp {
@@ -25,7 +23,7 @@ public class ahp {
             System.out.println("6. Wyjdz");
 
             System.out.println("Wybor: ");
-            String in = null;
+            String in = "6"; //Exit by default
             try {
                 in = bfr.readLine();
             } catch (IOException e) {
@@ -96,6 +94,10 @@ public class ahp {
                     break;
                 case "6":
                     try {
+                        File file = new File("err.txt");
+                        FileOutputStream fos = new FileOutputStream(file);
+                        PrintStream ps = new PrintStream(fos);
+                        System.setErr(ps);
                         bfr.close();
                         rd.close();
                     } catch (IOException e) {
